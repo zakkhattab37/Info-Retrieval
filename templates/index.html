@@ -6,30 +6,61 @@
     <title>Information Retrieval System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Meilisearch Theme Palette */
+            /* Pink: #ff5caa, Dark Violet: #1a003d, Prelude: #cbbbe0 */
+            
+            --primary-gradient: linear-gradient(135deg, #ff5caa 0%, #ff8dbb 100%);
+            --secondary-gradient: linear-gradient(135deg, #1a003d 0%, #4a0072 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(226, 232, 240, 0.8);
+            --card-shadow: 0 4px 6px -1px rgba(26, 0, 61, 0.05), 0 2px 4px -1px rgba(26, 0, 61, 0.03);
+            --hover-shadow: 0 10px 15px -3px rgba(255, 92, 170, 0.15), 0 4px 6px -2px rgba(26, 0, 61, 0.05);
 
-            /* Neon Colors */
-            --neon-blue: #00f3ff;
-            --neon-pink: #ff00ff;
-            --neon-purple: #9d00ff;
-            --neon-green: #00ff88;
-            --neon-yellow: #ffff00;
-            --neon-orange: #ff6b00;
+            /* Semantic Colors */
+            --color-primary: #ff5caa;
+            --color-secondary: #cbbbe0;
+            --color-accent: #1a003d; 
+            
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            
+            --color-background: #fcfcfd;
+            --color-text: #252b39;
+            --color-text-muted: #6b7280;
         }
 
         * {
             box-sizing: border-box;
         }
 
+        /* Parallax Stars Background */
+        /* Default (Light Mode) Body */
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--color-background); /* Light background */
+            color: var(--color-text);
             min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            transition: background 0.3s ease, color 0.3s ease;
+            font-family: 'Lato', 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.3s ease;
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+
+        /* Default: Stars Hidden in Light Mode */
+        #stars, #stars2, #stars3 {
+            opacity: 0; 
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        /* Ambient Background Mesh - REMOVED for Stars */
+        body::before {
+            display: none;
         }
 
         /* Responsive container */
@@ -46,20 +77,33 @@
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 1200px;
+                max-width: 100%;
                 margin: 0 auto;
             }
         }
 
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         .navbar {
-            background: var(--primary-gradient) !important;
-            box-shadow: var(--card-shadow);
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
             padding: 1rem 0;
+            z-index: 1000;
         }
 
         .navbar-brand {
             font-weight: 700;
             font-size: 1.4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         @media (max-width: 576px) {
@@ -69,47 +113,69 @@
         }
 
         .card {
-            border: none;
-            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
             box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
         .card:hover {
+            transform: translateY(-2px);
             box-shadow: var(--hover-shadow);
+            border-color: rgba(255, 255, 255, 0.8);
         }
 
         .card-header {
-            background: var(--primary-gradient);
-            color: white;
-            border-radius: 12px 12px 0 0 !important;
+            background: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            color: var(--color-text);
+            padding: 1rem 1.5rem;
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .btn-primary {
-            background: var(--primary-gradient);
+            background: var(--color-primary);
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 10px 24px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(29, 84, 109, 0.3);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            background: #e0458e; /* Darker Pink */
+            box-shadow: 0 10px 15px -3px rgba(255, 92, 170, 0.4);
+            filter: brightness(1.05);
         }
 
         .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            border-radius: 8px;
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            border-radius: 10px;
+            font-weight: 600;
+            background: transparent;
         }
 
         .btn-outline-primary:hover {
             background: var(--primary-gradient);
+            color: white;
             border-color: transparent;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
         }
 
         .search-box {
@@ -118,13 +184,16 @@
         }
 
         .search-box input {
-            border-radius: 25px;
-            padding: 15px 25px;
-            padding-right: 120px;
+            border-radius: 50px;
+            padding: 16px 28px;
+            padding-right: 130px;
             font-size: 1.1rem;
             border: 2px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
             transition: all 0.3s ease;
             width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
 
         @media (max-width: 576px) {
@@ -136,8 +205,10 @@
         }
 
         .search-box input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(29, 84, 109, 0.15);
+            outline: none;
         }
 
         .search-box .btn {
@@ -156,14 +227,20 @@
         }
 
         .result-card {
-            border-left: 4px solid #667eea;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
+            border-left: 4px solid var(--color-primary);
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 16px; /* Increased radius */
+            padding: 24px;       /* Increased padding */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy transition */
+            animation: fadeUp 0.6s ease backwards; /* Entry animation */
         }
 
         .result-card:hover {
-            border-left-color: #764ba2;
-            transform: translateX(5px);
+            border-left-color: #ff5caa;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 576px) {
@@ -194,12 +271,13 @@
         }
 
         .score-badge {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: var(--color-primary);
             color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
+            padding: 6px 14px;
+            border-radius: 30px;
             font-size: 0.85rem;
             font-weight: 600;
+            box-shadow: 0 2px 4px rgba(29, 84, 109, 0.2);
         }
 
         .relevant-badge {
@@ -207,23 +285,69 @@
         }
 
         .matched-term {
-            background: #fef3c7;
-            color: #92400e;
-            padding: 2px 8px;
-            border-radius: 4px;
+            background: rgba(95, 149, 152, 0.15);
+            color: #1D546D;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 0.8rem;
-            margin-right: 5px;
-            margin-bottom: 5px;
+            border: 1px solid rgba(95, 149, 152, 0.3);
+            margin-right: 6px;
+            margin-bottom: 6px;
             display: inline-block;
+            font-weight: 500;
+        }
+
+        /* Bootstrap Color Overrides for Meilisearch */
+        .text-primary { color: var(--color-primary) !important; }
+        .bg-primary { background-color: var(--color-primary) !important; }
+        .btn-primary { background-color: var(--color-primary); border-color: var(--color-primary); }
+        
+        .text-secondary { color: var(--color-secondary) !important; }
+        .bg-secondary { background-color: var(--color-secondary) !important; }
+        
+        .text-success { color: var(--color-success) !important; }
+        .bg-success { background-color: var(--color-success) !important; }
+        
+        .text-info { color: #ff5caa !important; }
+        .bg-info { background-color: #ff5caa !important; }
+
+        .btn-outline-primary {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #1a003d; /* Dark text on pink background for contrast */
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 24px;
             text-align: center;
             box-shadow: var(--card-shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
         }
 
         @media (max-width: 576px) {
@@ -367,6 +491,19 @@
         .tab-content {
             padding-top: 20px;
         }
+        
+        #mainTabContent {
+            background: rgba(227, 234, 255, 0.05);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+        }
+
+        body.dark-mode #mainTabContent {
+            background: rgba(5, 5, 5, 0.15); /* Transparent Black Glass */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+        }
 
         .nav-tabs {
             flex-wrap: nowrap;
@@ -388,10 +525,68 @@
             }
         }
 
-        .nav-tabs .nav-link.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: transparent;
+        /* Navbar Tabs Styling */
+        .navbar-nav .nav-item {
+            margin-right: 15px;
+        }
+
+        .navbar-nav .nav-link {
+            color: #64748b !important; /* Default Light Mode Text */
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--color-primary) !important;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-nav .nav-link.active {
+            color: var(--color-primary) !important;
+            background: rgba(255, 92, 170, 0.1);
+            font-weight: 600;
+            border: 1px solid rgba(255, 92, 170, 0.2);
+            box-shadow: none;
+        }
+
+        /* Dark Mode Navbar Overrides */
+        body.dark-mode .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        body.dark-mode .navbar-nav .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .navbar-nav .nav-link.active {
+            color: #fff !important;
+            background: rgba(255, 92, 170, 0.2); 
+            border: 1px solid rgba(255, 92, 170, 0.3);
+            box-shadow: 0 0 10px rgba(255, 92, 170, 0.1);
+        }
+
+        /* Navbar Buttons Logic */
+        .navbar .btn-outline-light {
+             color: #000;
+             border-color: #000;
+        }
+
+        .navbar .btn-outline-light:hover {
+             background: #000;
+             color: #fff;
+        }
+
+        body.dark-mode .navbar .btn-outline-light {
+             color: #fff;
+             border-color: #fff;
+        }
+
+        body.dark-mode .navbar .btn-outline-light:hover {
+             background: #fff;
+             color: #000;
         }
 
         .toast-container {
@@ -424,380 +619,201 @@
             color: #64748b;
         }
 
-        /* ========== NEON DARK MODE ========== */
+        /* ========== DARK MODE OVERRIDES ========== */
+        /* The star background IS the dark mode basically. 
+           We make sure the body background doesn't override it. */
+        /* ========== DARK MODE OVERRIDES ========== */
         body.dark-mode {
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 100%);
-            color: #e0e0e0;
-            animation: darkBgPulse 10s ease-in-out infinite;
+            background: radial-gradient(ellipse at bottom, #050505 0%, #000000 100%);
+            color: #fff;
+        }
+        
+        /* Show Stars in Dark Mode */
+        body.dark-mode #stars, 
+        body.dark-mode #stars2, 
+        body.dark-mode #stars3 {
+            opacity: 1;
         }
 
-        @keyframes darkBgPulse {
-            0%, 100% { background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 100%); }
-            50% { background: linear-gradient(135deg, #0f0a1a 0%, #2e0f1a 100%); }
-        }
-
-        body.dark-mode .loading-overlay {
-            background: rgba(10, 10, 15, 0.9);
-        }
-
-        body.dark-mode .loading-spinner {
-            border: 4px solid #2a2a3a;
-            border-top-color: var(--neon-blue);
-            box-shadow: 0 0 20px var(--neon-blue);
+        body.dark-mode::before {
+             display: none;
         }
 
         body.dark-mode .navbar {
-            background: linear-gradient(135deg, #1a0f2e 0%, #2e0f1a 100%) !important;
-            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.3);
-            border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         body.dark-mode .navbar-brand {
-            color: var(--neon-blue) !important;
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
-            animation: neonPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes neonPulse {
-            0%, 100% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue); }
-            50% { text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue), 0 0 60px var(--neon-blue); }
+            background: linear-gradient(135deg, #ff5caa 0%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 92, 170, 0.2);
+            animation: none;
         }
 
         body.dark-mode .card {
-            background: rgba(26, 15, 46, 0.8);
-            color: #e0e0e0;
-            border: 2px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.6); /* Neutral Black Glass */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
         body.dark-mode .card:hover {
-            border-color: rgba(0, 243, 255, 0.6);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), inset 0 0 30px rgba(0, 243, 255, 0.1);
+            border-color: rgba(255, 92, 170, 0.5);
+            background: rgba(20, 20, 20, 0.7);
             transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .form-control, 
+        body.dark-mode .search-box input,
+        body.dark-mode .form-select {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        body.dark-mode .form-control:focus, 
+        body.dark-mode .search-box input:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: var(--color-primary);
+            color: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 92, 170, 0.25);
         }
 
         body.dark-mode .card-header {
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.3) 0%, rgba(0, 243, 255, 0.3) 100%) !important;
-            color: var(--neon-blue);
-            border-bottom: 2px solid rgba(0, 243, 255, 0.5);
-            text-shadow: 0 0 10px var(--neon-blue);
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            text-shadow: none;
         }
 
         body.dark-mode .btn-primary {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-            color: white;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            background: #ff5caa;
+            border: none;
+            box-shadow: 0 4px 10px rgba(255, 92, 170, 0.3);
+            text-shadow: none;
+            color: #1a003d;
+            font-weight: 700;
         }
 
         body.dark-mode .btn-primary:hover {
-            box-shadow: 0 0 30px var(--neon-blue), 0 0 50px var(--neon-blue);
-            transform: translateY(-2px);
-            border-color: var(--neon-pink);
-        }
-
-        body.dark-mode .btn-outline-primary {
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-            text-shadow: 0 0 5px var(--neon-blue);
-        }
-
-        body.dark-mode .btn-outline-primary:hover {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
-
-        body.dark-mode .btn-outline-light {
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            text-shadow: 0 0 5px var(--neon-blue);
-        }
-
-        body.dark-mode .btn-outline-light:hover {
-            background: rgba(0, 243, 255, 0.1);
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 15px var(--neon-blue);
+            background: #ff8dbb;
+            box-shadow: 0 8px 15px rgba(255, 92, 170, 0.5);
+            border-color: transparent;
         }
 
         body.dark-mode .form-control,
         body.dark-mode .form-select {
-            background: rgba(10, 10, 15, 0.8);
-            color: var(--neon-blue);
-            border: 2px solid rgba(0, 243, 255, 0.3);
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+            background: rgba(10, 14, 25, 0.6);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         body.dark-mode .form-control:focus,
         body.dark-mode .form-select:focus {
-            background: rgba(10, 10, 15, 0.9);
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5), inset 0 0 10px rgba(0, 243, 255, 0.2);
+            background: rgba(20, 25, 40, 0.8);
+            border-color: #ff5caa;
+            box-shadow: 0 0 15px rgba(255, 92, 170, 0.25);
         }
 
-        body.dark-mode .form-control::placeholder {
-            color: rgba(0, 243, 255, 0.4);
+        body.dark-mode .search-box input {
+            background: rgba(15, 20, 35, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(8px);
+        }
+        
+        body.dark-mode .search-box input:focus {
+             border-color: #ff5caa;
+             box-shadow: 0 0 20px rgba(255, 92, 170, 0.3);
+             background: rgba(20, 25, 45, 0.9);
         }
 
         body.dark-mode .stat-card {
-            background: rgba(26, 15, 46, 0.6);
-            border: 2px solid rgba(157, 0, 255, 0.3);
-            box-shadow: 0 0 20px rgba(157, 0, 255, 0.3), inset 0 0 20px rgba(157, 0, 255, 0.05);
-        }
-
-        body.dark-mode .stat-card:hover {
-            border-color: rgba(157, 0, 255, 0.6);
-            box-shadow: 0 0 30px rgba(157, 0, 255, 0.5);
+            background: rgba(20, 25, 40, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         body.dark-mode .stat-card .stat-value {
-            background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-blue) 100%);
+             background: linear-gradient(135deg, #ff5caa 0%, #ffffff 100%);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 10px var(--neon-pink));
+            -webkit-text-fill-color: transparent;
+            filter: none;
         }
-
+        
         body.dark-mode .stat-card .stat-label {
-            color: rgba(0, 243, 255, 0.8);
-        }
-
-        body.dark-mode .metric-card {
-            background: rgba(26, 15, 46, 0.6);
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-        }
-
-        body.dark-mode .metric-value {
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
-            animation: metricGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes metricGlow {
-            0%, 100% { text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green); }
-            50% { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); }
-        }
-
-        body.dark-mode .metric-label {
-            color: rgba(0, 255, 136, 0.8);
-        }
-
-        body.dark-mode .modal-content {
-            background: rgba(26, 15, 46, 0.95);
-            color: #e0e0e0;
-            border: 2px solid rgba(0, 243, 255, 0.5);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.5);
-            backdrop-filter: blur(10px);
-        }
-
-        body.dark-mode .modal-header {
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.3) 0%, rgba(0, 243, 255, 0.3) 100%);
-            border-bottom: 2px solid rgba(0, 243, 255, 0.5);
-            color: var(--neon-blue);
-        }
-
-        body.dark-mode .modal-title {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        body.dark-mode .nav-tabs {
-            border-bottom: 2px solid rgba(0, 243, 255, 0.3);
-        }
-
-        body.dark-mode .nav-tabs .nav-link {
-            color: rgba(0, 243, 255, 0.7);
-            border: 2px solid transparent;
-            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
-        }
-
-        body.dark-mode .nav-tabs .nav-link:hover {
-            color: var(--neon-blue);
-            border-color: rgba(0, 243, 255, 0.3);
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        body.dark-mode .nav-tabs .nav-link.active {
-            background: linear-gradient(135deg, rgba(157, 0, 255, 0.3) 0%, rgba(0, 243, 255, 0.3) 100%);
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            color: #cbbbe0;
         }
 
         body.dark-mode .result-card {
-            background: rgba(26, 15, 46, 0.6);
-            border-left: 4px solid var(--neon-purple);
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
+             background: rgba(20, 25, 40, 0.5); /* Matching cards */
+             backdrop-filter: blur(12px);
+             border: 1px solid rgba(255, 255, 255, 0.08); /* No heavy border except left */
+             border-left: 4px solid #ff5caa;
+             color: #e2e8f0;
         }
-
+        
         body.dark-mode .result-card:hover {
-            border-left-color: var(--neon-pink);
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
-        }
-
-        body.dark-mode .result-rank {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
-            box-shadow: 0 0 15px var(--neon-purple);
-        }
-
-        body.dark-mode .score-badge {
-            background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-blue) 100%);
-            box-shadow: 0 0 15px var(--neon-green);
-        }
-
-        body.dark-mode .relevant-badge {
-            background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-orange) 100%);
-            box-shadow: 0 0 15px var(--neon-pink);
-            animation: relevantPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes relevantPulse {
-            0%, 100% { box-shadow: 0 0 15px var(--neon-pink); }
-            50% { box-shadow: 0 0 25px var(--neon-pink), 0 0 35px var(--neon-pink); }
+            background: rgba(30, 35, 60, 0.6);
+            /* border-left-color: #ffffff; */ /* Keep pink identification */
+            box-shadow: 0 10px 40px rgba(255, 92, 170, 0.15); /* Pink glow on hover */
         }
 
         body.dark-mode .matched-term {
-            background: rgba(255, 255, 0, 0.15);
-            color: var(--neon-yellow);
-            border: 1px solid rgba(255, 255, 0, 0.3);
-            text-shadow: 0 0 5px var(--neon-yellow);
+            background: rgba(255, 92, 170, 0.15);
+            color: #ff5caa;
+            border-color: rgba(255, 92, 170, 0.3);
+            text-shadow: none;
         }
 
-        body.dark-mode .document-item {
-            border-bottom-color: rgba(0, 243, 255, 0.2);
-            background: rgba(26, 15, 46, 0.3);
+        /* Cleaning up previous extreme neon styles */
+        body.dark-mode .navbar-brand { animation: none; }
+        body.dark-mode .relevant-badge { animation: none; }
+        body.dark-mode .metric-value { animation: none; }
+        
+        /* Metric Cards in Dark Mode */
+        body.dark-mode .metric-card {
+             background: rgba(40, 10, 80, 0.7);
+             border: 1px solid rgba(255, 92, 170, 0.2);
         }
-
-        body.dark-mode .document-item:hover {
-            background: rgba(0, 243, 255, 0.1);
-            border-left: 3px solid var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-        }
-
-        body.dark-mode .alert-info {
-            background: rgba(0, 243, 255, 0.1);
-            border: 2px solid rgba(0, 243, 255, 0.3);
-            color: var(--neon-blue);
-        }
-
-        body.dark-mode .alert-success {
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            color: var(--neon-green);
-        }
-
-        body.dark-mode .alert-warning {
-            background: rgba(255, 107, 0, 0.1);
-            border: 2px solid rgba(255, 107, 0, 0.3);
-            color: var(--neon-orange);
-        }
-
-        body.dark-mode .table {
-            color: #e0e0e0;
-            border-color: rgba(0, 243, 255, 0.2);
-        }
-
-        body.dark-mode .table thead th {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
-            border-color: rgba(0, 243, 255, 0.3);
-            color: white;
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        body.dark-mode .table tbody td {
-            border-color: rgba(0, 243, 255, 0.2);
-            background: rgba(26, 15, 46, 0.3);
-        }
-
-        body.dark-mode .table tbody tr:hover {
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        body.dark-mode .best-metric {
-            background: rgba(0, 255, 136, 0.2) !important;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-            font-weight: 600;
-        }
-
-        body.dark-mode .text-muted {
-            color: rgba(0, 243, 255, 0.6) !important;
-        }
-
-        body.dark-mode .text-primary {
-            color: var(--neon-blue) !important;
-            text-shadow: 0 0 5px var(--neon-blue);
-        }
-
-        body.dark-mode .algorithm-card {
-            background: rgba(26, 15, 46, 0.6);
-            border: 2px solid rgba(157, 0, 255, 0.3);
-            box-shadow: 0 0 20px rgba(157, 0, 255, 0.2);
-        }
-
-        body.dark-mode .algorithm-card:hover {
-            border-color: rgba(157, 0, 255, 0.6);
-            box-shadow: 0 0 30px rgba(157, 0, 255, 0.4);
-            transform: translateY(-5px);
-        }
-
-        body.dark-mode .algorithm-card h5 {
-            color: var(--neon-purple);
-            text-shadow: 0 0 10px var(--neon-purple);
-        }
-
-        body.dark-mode .algorithm-card .metric {
-            border-bottom-color: rgba(0, 243, 255, 0.2);
-        }
-
-        body.dark-mode .algorithm-card .metric strong {
-            color: var(--neon-blue);
-        }
-
-        body.dark-mode .algorithm-btn.active {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 20px var(--neon-blue);
-            color: white;
-        }
-
-        body.dark-mode .badge {
-            border: 1px solid currentColor;
-        }
-
-        body.dark-mode .badge-good {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--neon-green);
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-        }
-
-        body.dark-mode .badge-bad {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff4444;
-            border-color: #ff4444;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
-        }
-
-        body.dark-mode .badge-medium {
-            background: rgba(255, 107, 0, 0.2);
-            color: var(--neon-orange);
-            border-color: var(--neon-orange);
-            box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
-        }
-
-        body.dark-mode .badge-secondary {
-            background: rgba(0, 243, 255, 0.2);
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
+        
+        body.dark-mode .metric-value {
+            color: #ff5caa;
+            text-shadow: 0 0 10px rgba(255, 92, 170, 0.2);
         }
 
         body.dark-mode .comparison-table th {
-            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            background: linear-gradient(135deg, #1a003d 0%, #ff5caa 100%);
+            box-shadow: none;
+        }
+        
+        body.dark-mode .best-metric {
+            background: rgba(255, 92, 170, 0.15) !important;
+            color: #ff5caa;
+            box-shadow: none;
+        }
+
+        body.dark-mode .document-item {
+             border-bottom-color: rgba(255, 92, 170, 0.1);
+             background: transparent;
+        }
+        
+        body.dark-mode .document-item:hover {
+            background: rgba(255, 92, 170, 0.1);
+            border-left-color: #ff5caa;
+            box-shadow: none;
         }
 
         body.dark-mode #statusBadge {
@@ -955,9 +971,182 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        /* Title Style for Parallax Stars */
+        #title {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            color: #FFF;
+            text-align: center;
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+            font-size: 50px;
+            letter-spacing: 10px;
+            margin-top: -60px;
+            padding-left: 10px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #title span {
+            background: -webkit-linear-gradient(white, #38495a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .formula-style {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: -0.5px;
+            padding: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        body.graph-mode {
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(#e1e1e1 1px, transparent 1px),
+                linear-gradient(90deg, #e1e1e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        body.dark-mode.graph-mode {
+            background-color: #1a1a1a;
+            background-image: 
+                linear-gradient(#333 1px, transparent 1px),
+                linear-gradient(90deg, #333 1px, transparent 1px);
+        }
+
+        /* Transparent Container in Graph Mode so Body Background Shows */
+        body.graph-mode #mainTabContent {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 10px;
+        }
+
+        .algorithm-card {
+            /* Pastel Glass Style matching Reference */
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Specific Pastel Gradients */
+        .algorithm-card:nth-child(1) { /* Greenish */
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.65) 0%, rgba(167, 243, 208, 0.45) 100%);
+        }
+        .algorithm-card:nth-child(2) { /* Blueish */
+            background: linear-gradient(135deg, rgba(219, 234, 254, 0.65) 0%, rgba(191, 219, 254, 0.45) 100%);
+        }
+        .algorithm-card:nth-child(3) { /* Purpleish */
+            background: linear-gradient(135deg, rgba(237, 233, 254, 0.65) 0%, rgba(221, 214, 254, 0.45) 100%);
+        }
+        .algorithm-card:nth-child(4) { /* Orangeish */
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.65) 0%, rgba(253, 230, 138, 0.45) 100%);
+        }
+        .algorithm-card:nth-child(5) { /* Tealist */
+            background: linear-gradient(135deg, rgba(204, 251, 241, 0.65) 0%, rgba(153, 246, 228, 0.45) 100%);
+        }
+
+        /* Inner circles for decoration like reference */
+        .algorithm-card::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .algorithm-card h5 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            color: #1f2937;
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .formula-style {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.6);
+            /* Font updates */
+            font-size: 1.1rem;
+            color: #374151;
+            font-weight: 600;
+            display: block;
+        }
+
+        body.dark-mode .algorithm-card {
+            background-color: rgba(30, 41, 59, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+         /* Dark mode gradients overlay */
+        body.dark-mode .algorithm-card:nth-child(1) { background: linear-gradient(135deg, rgba(6, 78, 59, 0.6) 0%, rgba(4, 120, 87, 0.4) 100%); }
+        body.dark-mode .algorithm-card:nth-child(2) { background: linear-gradient(135deg, rgba(30, 58, 138, 0.6) 0%, rgba(29, 78, 216, 0.4) 100%); }
+        body.dark-mode .algorithm-card:nth-child(3) { background: linear-gradient(135deg, rgba(76, 29, 149, 0.6) 0%, rgba(109, 40, 217, 0.4) 100%); }
+        body.dark-mode .algorithm-card:nth-child(4) { background: linear-gradient(135deg, rgba(120, 53, 15, 0.6) 0%, rgba(180, 83, 9, 0.4) 100%); }
+        body.dark-mode .algorithm-card:nth-child(5) { background: linear-gradient(135deg, rgba(19, 78, 74, 0.6) 0%, rgba(15, 118, 110, 0.4) 100%); }
+
+        body.dark-mode .algorithm-card h5 { color: #f3f4f6; }
+        body.dark-mode .formula-style {
+             background: rgba(0, 0, 0, 0.2);
+             color: #e5e7eb;
+             border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .algorithm-card h5 {
+            color: #fff;
+            border-color: #fff;
+        }
     </style>
+    <!-- Parallax Stars CSS (Generated & Served via Flask) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stars.css') }}">
 </head>
 <body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    
+    <!-- Hero Title Removed per user preference for clearer view -->
+
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-spinner"></div>
@@ -967,27 +1156,62 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4 sticky-top">
+        <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <i class="bi bi-search-heart me-2"></i>IR System
             </a>
-            <div class="d-flex align-items-center">
-                <span class="badge bg-light text-dark me-3" id="statusBadge">
-                    <i class="bi bi-circle-fill text-danger me-1" style="font-size: 8px;"></i>
-                    Not Indexed
-                </span>
-                <button class="btn btn-outline-light btn-sm me-2" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-                    <i class="bi bi-moon-stars" id="darkModeIcon"></i>
-                </button>
-                <button class="btn btn-outline-light btn-sm" onclick="clearData()">
-                    <i class="bi bi-trash me-1"></i>Clear All
-                </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="mainTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="search-tab" data-bs-toggle="tab" data-bs-target="#searchPane" type="button">
+                            <i class="bi bi-search me-1"></i>Search
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documentsPane" type="button">
+                            <i class="bi bi-file-text me-1"></i>Documents
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="compare-tab" data-bs-toggle="tab" data-bs-target="#comparePane" type="button">
+                            <i class="bi bi-bar-chart me-1"></i>Compare
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#uploadPane" type="button">
+                            <i class="bi bi-cloud-upload me-1"></i>Load Data
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docsPane" type="button">
+                            <i class="bi bi-book me-1"></i>Documentation
+                        </button>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-light text-dark me-3" id="statusBadge">
+                        <i class="bi bi-circle-fill text-danger me-1" style="font-size: 8px;"></i>
+                        Not Indexed
+                    </span>
+                    <button class="btn btn-outline-light btn-sm me-2" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                        <i class="bi bi-moon-stars" id="darkModeIcon"></i>
+                    </button>
+                    <button class="btn btn-outline-light btn-sm me-2" onclick="toggleFullScreen()" title="Toggle Full Screen">
+                        <i class="bi bi-arrows-fullscreen" id="fullScreenIcon"></i>
+                    </button>
+                    <button class="btn btn-outline-light btn-sm" onclick="clearData()">
+                        <i class="bi bi-trash me-1"></i>Clear All
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container pb-5">
+    <div class="container-fluid">
         <!-- Stats Row -->
         <div class="row mb-4" id="statsRow" style="display: none;">
             <div class="col-md-3 col-6 mb-3">
@@ -1016,36 +1240,9 @@
             </div>
         </div>
 
-        <!-- Main Tabs -->
-        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="search-tab" data-bs-toggle="tab" data-bs-target="#searchPane" type="button">
-                    <i class="bi bi-search me-1"></i>Search
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documentsPane" type="button">
-                    <i class="bi bi-file-text me-1"></i>Documents
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="compare-tab" data-bs-toggle="tab" data-bs-target="#comparePane" type="button">
-                    <i class="bi bi-bar-chart me-1"></i>Compare
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#uploadPane" type="button">
-                    <i class="bi bi-cloud-upload me-1"></i>Load Data
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docsPane" type="button">
-                    <i class="bi bi-book me-1"></i>Documentation
-                </button>
-            </li>
-        </ul>
+        <!-- Tabs Moved to Navbar -->
 
-        <div class="tab-content bg-white rounded-bottom shadow-sm p-4" id="mainTabContent">
+        <div class="tab-content rounded-bottom p-4" id="mainTabContent">
             <!-- Search Tab -->
             <div class="tab-pane fade show active" id="searchPane" role="tabpanel">
                 <!-- Algorithm Selection -->
@@ -1320,7 +1517,7 @@
             <!-- Algorithms Documentation Tab -->
             <div class="tab-pane fade" id="docsPane" role="tabpanel">
                 <h4 class="mb-4"><i class="bi bi-book me-2"></i>Search Algorithms Documentation</h4>
-
+                
                 <div class="docs-grid">
                     <!-- BM25 -->
                     <div class="algorithm-card">
@@ -1334,7 +1531,8 @@
 
                         <div class="metric">
                             <strong>Formula:</strong>
-                            <span class="text-muted">BM25(D,Q) = Σ IDF(qi) × (f(qi,D) × (k1+1)) / (f(qi,D) + k1×(1-b+b×|D|/avgdl))</span>
+                            <br>
+                            <span class="formula-style">BM25(D,Q) = Σ IDF(qi) × (f(qi,D) × (k1+1)) / (f(qi,D) + k1×(1-b+b×|D|/avgdl))</span>
                         </div>
 
                         <div class="metric">
@@ -1374,7 +1572,8 @@
 
                         <div class="metric">
                             <strong>Formula:</strong>
-                            <span class="text-muted">TF-IDF(t,d) = TF(t,d) × log(N/df(t))</span>
+                            <br>
+                            <span class="formula-style">TF-IDF(t,d) = TF(t,d) × log(N/df(t))</span>
                         </div>
 
                         <div class="metric">
@@ -1414,7 +1613,8 @@
 
                         <div class="metric">
                             <strong>Formula:</strong>
-                            <span class="text-muted">cos(θ) = (D·Q) / (||D|| × ||Q||)</span>
+                            <br>
+                            <span class="formula-style">cos(θ) = (D·Q) / (||D|| × ||Q||)</span>
                         </div>
 
                         <div class="metric">
@@ -1454,7 +1654,8 @@
 
                         <div class="metric">
                             <strong>Formula:</strong>
-                            <span class="text-muted">Log-TF-IDF(t,d) = (1+log(TF(t,d))) × log(N/df(t))</span>
+                            <br>
+                            <span class="formula-style">Log-TF-IDF(t,d) = (1+log(TF(t,d))) × log(N/df(t))</span>
                         </div>
 
                         <div class="metric">
@@ -1494,7 +1695,8 @@
 
                         <div class="metric">
                             <strong>Formula:</strong>
-                            <span class="text-muted">Boolean(D,Q) = 1 if all terms in Q exist in D, else 0</span>
+                            <br>
+                            <span class="formula-style">Boolean(D,Q) = 1 if all terms in Q exist in D, else 0</span>
                         </div>
 
                         <div class="metric">
@@ -2194,11 +2396,59 @@
             const darkMode = localStorage.getItem('darkMode');
             if (darkMode === 'enabled') {
                 document.body.classList.add('dark-mode');
+                document.getElementById('darkModeIcon').classList.remove('bi-moon-stars');
                 document.getElementById('darkModeIcon').classList.add('bi-sun');
             } else {
-                document.getElementById('darkModeIcon').classList.add('bi-moon-stars');
+                 document.getElementById('darkModeIcon').classList.add('bi-moon-stars');
+                 document.getElementById('darkModeIcon').classList.remove('bi-sun');
             }
         })();
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    document.getElementById('fullScreenIcon').classList.replace('bi-arrows-fullscreen', 'bi-fullscreen-exit');
+                }).catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().then(() => {
+                        document.getElementById('fullScreenIcon').classList.replace('bi-fullscreen-exit', 'bi-arrows-fullscreen');
+                    });
+                }
+            }
+        }
+
+        // Listen for full screen change (ESC key)
+        document.addEventListener('fullscreenchange', (event) => {
+            if (!document.fullscreenElement) {
+                document.getElementById('fullScreenIcon').classList.replace('bi-fullscreen-exit', 'bi-arrows-fullscreen');
+            } else {
+                 document.getElementById('fullScreenIcon').classList.replace('bi-arrows-fullscreen', 'bi-fullscreen-exit');
+            }
+        });
+
+        // Tab Event Listeners for Graph Mode
+        document.addEventListener('DOMContentLoaded', function() {
+            var tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabEls.forEach(function(tabEl) {
+                tabEl.addEventListener('shown.bs.tab', function(event) {
+                    if (event.target.id === 'docs-tab') {
+                        document.body.classList.add('graph-mode');
+                        // Hide stars in graph mode for cleaner look
+                        if(document.getElementById('stars')) document.getElementById('stars').style.display = 'none';
+                        if(document.getElementById('stars2')) document.getElementById('stars2').style.display = 'none';
+                        if(document.getElementById('stars3')) document.getElementById('stars3').style.display = 'none';
+                    } else {
+                        document.body.classList.remove('graph-mode');
+                        // Restore stars
+                         if(document.getElementById('stars')) document.getElementById('stars').style.display = 'block';
+                         if(document.getElementById('stars2')) document.getElementById('stars2').style.display = 'block';
+                         if(document.getElementById('stars3')) document.getElementById('stars3').style.display = 'block';
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
