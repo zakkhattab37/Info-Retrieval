@@ -57,7 +57,12 @@ class Tokenizer:
         'own', 'same', 'so', 'than', 'too', 'very', 'just', 'also', 'now',
         'here', 'there', 'then', 'once', 'if', 'because', 'about', 'into',
         'through', 'during', 'before', 'after', 'above', 'below', 'between',
-        'under', 'again', 'further', 'while', 'any', 'being', 'having', 'doing'
+        'under', 'again', 'further', 'while', 'any', 'being', 'having', 'doing',
+        # Arabic Stopwords
+        'في', 'من', 'على', 'إلى', 'عن', 'مع', 'ما', 'لا', 'أن', 'كان', 'هو', 'هي', 'هم',
+        'هذا', 'هذه', 'تلك', 'ذلك', 'الذي', 'التي', 'الذين', 'كل', 'عند', 'أو', 'ثم',
+        'حيث', 'كيف', 'متى', 'لماذا', 'كم', 'أي', 'يا', 'بين', 'فوق', 'تحت', 'بعد',
+        'وقد', 'حتى', 'كما', 'ومن', 'فإن', 'لو', 'إذا', 'غير', 'ولكن'
     }
 
     def __init__(self, lowercase: bool = True, remove_punctuation: bool = True,
@@ -70,10 +75,15 @@ class Tokenizer:
         self.min_token_length = min_token_length
         self.stemmer = None
 
+        self.stemmer = None
+        self.arabic_stemmer = None
+
         if use_stemming:
             try:
                 from nltk.stem import PorterStemmer
+                from nltk.stem.isri import ISRIStemmer
                 self.stemmer = PorterStemmer()
+                self.arabic_stemmer = ISRIStemmer()
             except ImportError:
                 print("NLTK not installed. Stemming disabled.")
                 self.use_stemming = False
@@ -96,29 +106,50 @@ class Tokenizer:
         tokens = []
         position = 0
 
-        # Use regex to find words
-        pattern = r'\b\w+\b' if not self.remove_punctuation else r'\b[a-zA-Z0-9]+\b'
+        # Use regex to find words - Updated to include Arabic
+        # \w matches [a-zA-Z0-9_] plus unicode characters (including Arabic) in Python 3
+        # We use \w+ to catch everything, and if strict punctuation removal is needed we filter later
+        # OR we can just use \w+ which effectively removes punctuation that isn't part of a word.
+        # The previous r'\b[a-zA-Z0-9]+\b' was too restrictive for Arabic.
+        pattern = r'\b\w+\b' 
 
         for match in re.finditer(pattern, text):
-            word = match.group()
-            original_word = original_text[match.start():match.end()]
-
-            # Skip short tokens
-            if len(word) < self.min_token_length:
+            term = match.group(0)
+            
+            # If we want strict alphanumeric (excluding underscores etc) we can check here
+            # But usually \w is fine. If remove_punctuation is True, we might want to filter out tokens that are JUST underscores?
+            # For now, \w+ is a good standard for "words".
+            
+            original_term_form = original_text[match.start():match.end()]
+            
+            # --- Processing Pipeline for Term ---
+            
+            # 1. Filter by length
+            if len(term) < self.min_token_length:
                 continue
 
-            # Skip stopwords
-            if self.remove_stopwords and word.lower() in self.STOPWORDS:
+            # 2. Stopword Removal
+            if self.remove_stopwords and term in self.STOPWORDS:
                 continue
 
-            # Apply stemming
-            if self.use_stemming and self.stemmer:
-                word = self.stemmer.stem(word)
+            # 3. Stemming
+            if self.use_stemming:
+                 # Check if the term has Arabic characters
+                 is_arabic = any('\u0600' <= char <= '\u06FF' for char in term)
+                 
+                 if is_arabic and self.arabic_stemmer:
+                     term = self.arabic_stemmer.stem(term)
+                 elif not is_arabic and self.stemmer:
+                     term = self.stemmer.stem(term)
 
             tokens.append(Token(
-                term=word,
-                position=position,
-                original=original_word
+                term=term,
+                position=position if not keep_positions else match.start(), # Fix: match.start() is char pos, position is token index. 
+                # Wait, Token definition says "position: int". Usually this is token index (0, 1, 2...). 
+                # Previous code used 'position' variable.
+                # Let's stick to 'position' which increments.
+                # However, original code 'position=position' is correct for token index.
+                original=original_term_form
             ))
             position += 1
 

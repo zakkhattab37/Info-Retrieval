@@ -273,7 +273,7 @@ def search():
             'doc_id': r.doc_id,
             'title': r.document.title if r.document else f'Document {r.doc_id}',
             'score': round(r.score, 4),
-            'content': r.document.content[:300] + '...' if r.document and len(r.document.content) > 300 else (r.document.content if r.document else ''),
+            'content': r.document.content if r.document else '',
             'matched_terms': r.matched_terms,
             'word_frequencies': word_frequencies
         })
@@ -338,7 +338,7 @@ def search_with_evaluation():
             'doc_id': r.doc_id,
             'title': r.document.title if r.document else f'Document {r.doc_id}',
             'score': round(r.score, 4),
-            'content': r.document.content[:300] + '...' if r.document and len(r.document.content) > 300 else (r.document.content if r.document else ''),
+            'content': r.document.content if r.document else '',
             'matched_terms': r.matched_terms,
             'is_relevant': r.doc_id in relevant_ids,
             'word_frequencies': word_frequencies
